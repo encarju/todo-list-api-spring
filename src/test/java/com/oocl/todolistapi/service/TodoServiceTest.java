@@ -42,8 +42,10 @@ class TodoServiceTest {
         //Given
         List<Todo> todos = asList(new Todo());
         when(todoRepository.findAll()).thenReturn(todos);
+
         //When
         List<Todo> returnedTodos = todoService.getAll();
+
         //Then
         assertNotNull(returnedTodos);
         assertEquals(todos.size(), returnedTodos.size());

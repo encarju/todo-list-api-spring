@@ -78,6 +78,7 @@ public class TodoIntegrationTest {
                 "    \"text\" : \"" + newTodoText + "\",\n" +
                 "    \"done\" : \"true\"\n" +
                 "}";
+
         //When
         //Then
         mockMvc.perform(put(format("/todos/%d", returnedTodoId))
