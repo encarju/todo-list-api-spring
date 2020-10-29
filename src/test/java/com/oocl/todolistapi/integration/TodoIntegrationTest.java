@@ -81,4 +81,23 @@ public class TodoIntegrationTest {
                 .andExpect(jsonPath("$.text").value("Todo 1"))
                 .andExpect(jsonPath("$.done").value(true));
     }
+
+    @Test
+    void should_return_not_found_status_when_update_given_wrong_id_and_updated_to_do_request() throws Exception {
+        //Given
+        Integer wrongId = 0;
+
+        String todoRequest = "{\n" +
+                "    \"done\" : \"true\"\n" +
+                "}";
+        //When
+        //Then
+        mockMvc.perform(put(format("/todos/%d", wrongId))
+                .contentType(APPLICATION_JSON)
+                .content(todoRequest))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("NOT_FOUND"))
+                .andExpect(jsonPath("$.errorMessage").value(format("Todo with ID %d not found", wrongId)))
+                .andExpect(jsonPath("$.status").value(404));
+    }
 }

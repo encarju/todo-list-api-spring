@@ -1,5 +1,6 @@
 package com.oocl.todolistapi.service;
 
+import com.oocl.todolistapi.exception.TodoNotFoundException;
 import com.oocl.todolistapi.model.Todo;
 import com.oocl.todolistapi.repository.TodoRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ public class TodoService {
         return todoRepository.findById(id)
                 .map(todo -> {
                     todo.setDone(updatedTodo.isDone());
+
                     return todoRepository.save(todo);
-                }).orElse(null);
+                }).orElseThrow(() -> new TodoNotFoundException(id));
     }
 }

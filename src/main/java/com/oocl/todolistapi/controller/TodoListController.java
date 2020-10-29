@@ -46,6 +46,7 @@ public class TodoListController {
     @PutMapping("/{id}")
     public TodoResponse updateTodoStatus(@PathVariable Integer id, @RequestBody TodoRequest updatedTodoRequest) {
         Todo updatedTodo = TODO_MAPPER.toEntity(updatedTodoRequest);
+
         return TODO_MAPPER.toResponse(todoService.update(id, updatedTodo));
     }
 
