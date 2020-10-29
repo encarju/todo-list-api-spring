@@ -3,7 +3,7 @@ package com.oocl.todolistapi.dto;
 public class TodoResponse {
     private Integer id;
     private String text;
-    private boolean isDone;
+    private boolean done;
 
     public Integer getId() {
         return id;
@@ -22,10 +22,10 @@ public class TodoResponse {
     }
 
     public boolean isDone() {
-        return isDone;
+        return done;
     }
 
     public void setDone(boolean done) {
-        isDone = done;
+        this.done = done;
     }
 }

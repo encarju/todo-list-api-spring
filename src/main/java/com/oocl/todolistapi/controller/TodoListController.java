@@ -44,15 +44,9 @@ public class TodoListController {
     }
 
     @PutMapping("/{id}")
-    public Todo updateTodoStatus(@PathVariable Integer id, @RequestBody Todo updatedTodo) {
-        return todos.stream()
-                .filter(todo -> todo.getId() == id)
-                .findFirst()
-                .map(todo -> {
-                    todo.setDone(updatedTodo.isDone());
-
-                    return todo;
-                }).orElse(null);
+    public TodoResponse updateTodoStatus(@PathVariable Integer id, @RequestBody TodoRequest updatedTodoRequest) {
+        Todo updatedTodo = TODO_MAPPER.toEntity(updatedTodoRequest);
+        return TODO_MAPPER.toResponse(todoService.update(id, updatedTodo));
     }
 
     @DeleteMapping("/{id}")
