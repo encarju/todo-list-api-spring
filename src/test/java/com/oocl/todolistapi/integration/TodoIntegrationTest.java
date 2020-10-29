@@ -73,7 +73,9 @@ public class TodoIntegrationTest {
         todo.setDone(false);
         Integer returnedTodoId = todoRepository.save(todo).getId();
 
+        String newTodoText = "Todo 2";
         String todoRequest = "{\n" +
+                "    \"text\" : \"" + newTodoText + "\",\n" +
                 "    \"done\" : \"true\"\n" +
                 "}";
         //When
@@ -83,7 +85,7 @@ public class TodoIntegrationTest {
                 .content(todoRequest))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(returnedTodoId))
-                .andExpect(jsonPath("$.text").value(TODO_1))
+                .andExpect(jsonPath("$.text").value(newTodoText))
                 .andExpect(jsonPath("$.done").value(true));
     }
 

@@ -27,6 +27,7 @@ public class TodoService {
     public Todo update(Integer id, Todo updatedTodo) {
         return todoRepository.findById(id)
                 .map(todo -> {
+                    todo.setText(updatedTodo.getText());
                     todo.setDone(updatedTodo.isDone());
 
                     return todoRepository.save(todo);

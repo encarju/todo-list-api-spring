@@ -82,6 +82,7 @@ class TodoServiceTest {
         when(todoRepository.save(todo)).thenReturn(todo);
 
         Todo updatedTodo = new Todo();
+        updatedTodo.setText("Todo 2");
         updatedTodo.setDone(true);
 
         //When
@@ -89,7 +90,7 @@ class TodoServiceTest {
 
         //Then
         assertEquals(todo.getId(), returnedTodo.getId());
-        assertEquals(todo.getText(), returnedTodo.getText());
+        assertEquals(updatedTodo.getText(), returnedTodo.getText());
         assertEquals(updatedTodo.isDone(), returnedTodo.isDone());
         verify(todoRepository, times(ONCE)).findById(id);
         verify(todoRepository, times(ONCE)).save(todo);
