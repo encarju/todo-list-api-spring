@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.oocl.todolistapi.mapper.TodoMapper.TODO_MAPPER;
@@ -23,8 +22,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @RequestMapping("/todos")
 public class TodoListController {
-    private List<Todo> todos = new ArrayList<>();
-    private TodoService todoService;
+    private final TodoService todoService;
 
     public TodoListController(TodoService todoService) {
         this.todoService = todoService;
