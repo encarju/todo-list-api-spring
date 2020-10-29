@@ -2,7 +2,7 @@ package com.oocl.todolistapi.dto;
 
 public class TodoRequest {
     private String text;
-    private boolean isDone;
+    private boolean done;
 
     public String getText() {
         return text;
@@ -13,10 +13,10 @@ public class TodoRequest {
     }
 
     public boolean isDone() {
-        return isDone;
+        return done;
     }
 
     public void setDone(boolean done) {
-        isDone = done;
+        this.done = done;
     }
 }

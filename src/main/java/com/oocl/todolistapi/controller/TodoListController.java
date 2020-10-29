@@ -1,7 +1,7 @@
 package com.oocl.todolistapi.controller;
 
+import com.oocl.todolistapi.dto.TodoRequest;
 import com.oocl.todolistapi.dto.TodoResponse;
-import com.oocl.todolistapi.mapper.TodoMapper;
 import com.oocl.todolistapi.model.Todo;
 import com.oocl.todolistapi.service.TodoService;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.oocl.todolistapi.mapper.TodoMapper.*;
+import static com.oocl.todolistapi.mapper.TodoMapper.TODO_MAPPER;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/todos")
@@ -34,9 +36,11 @@ public class TodoListController {
     }
 
     @PostMapping
-    public Todo addTodo(@RequestBody Todo todo) {
-        todos.add(todo);
-        return todo;
+    @ResponseStatus(CREATED)
+    public TodoResponse addTodo(@RequestBody TodoRequest todoRequest) {
+        Todo todo = TODO_MAPPER.toEntity(todoRequest);
+
+        return TODO_MAPPER.toResponse(todoService.create(todo));
     }
 
     @PutMapping("/{id}")

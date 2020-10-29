@@ -39,4 +39,24 @@ class TodoServiceTest {
         assertEquals(todos.size(), returnedTodos.size());
         verify(todoRepository, times(ONCE)).findAll();
     }
+
+    @Test
+    void should_return_the_created_todo_when_create_todo_given_todo() {
+        //Given
+        Todo todo = new Todo();
+        todo.setId(1);
+        todo.setText("Todo 1");
+        todo.setDone(false);
+
+        when(todoRepository.save(todo)).thenReturn(todo);
+
+        //When
+        Todo returnedTodo = todoService.create(todo);
+
+        //Then
+        assertEquals(todo.getId(), returnedTodo.getId());
+        assertEquals(todo.getText(), returnedTodo.getText());
+        assertEquals(todo.isDone(), returnedTodo.isDone());
+        verify(todoRepository, times(ONCE)).save(todo);
+    }
 }
