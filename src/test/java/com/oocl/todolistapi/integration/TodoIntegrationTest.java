@@ -9,6 +9,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.oocl.todolistapi.TestConstants.FORMATTED_TODO_EXCEPTION_MESSAGE;
+import static com.oocl.todolistapi.TestConstants.NOT_FOUND;
+import static com.oocl.todolistapi.TestConstants.STATUS_404;
+import static com.oocl.todolistapi.TestConstants.TODO_1;
+import static com.oocl.todolistapi.TestConstants.WRONG_ID;
 import static java.lang.String.format;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -46,7 +51,7 @@ public class TodoIntegrationTest {
     void should_return_the_created_todo_response_when_create_given_todo_request() throws Exception {
         //Given
         String todoRequest = "{\n" +
-                "   \"text\": \"Todo 1\"\n" +
+                "   \"text\": \"" + TODO_1 + "\"\n" +
                 "}";
 
         //When
@@ -56,7 +61,7 @@ public class TodoIntegrationTest {
                 .content(todoRequest))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.text").value("Todo 1"))
+                .andExpect(jsonPath("$.text").value(TODO_1))
                 .andExpect(jsonPath("$.done").value(false));
     }
 
@@ -64,7 +69,7 @@ public class TodoIntegrationTest {
     void should_return_updated_todo_when_update_given_id_and_updated_to_do_request() throws Exception {
         //Given
         Todo todo = new Todo();
-        todo.setText("Todo 1");
+        todo.setText(TODO_1);
         todo.setDone(false);
         Integer returnedTodoId = todoRepository.save(todo).getId();
 
@@ -78,34 +83,32 @@ public class TodoIntegrationTest {
                 .content(todoRequest))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(returnedTodoId))
-                .andExpect(jsonPath("$.text").value("Todo 1"))
+                .andExpect(jsonPath("$.text").value(TODO_1))
                 .andExpect(jsonPath("$.done").value(true));
     }
 
     @Test
     void should_return_not_found_status_when_update_given_wrong_id_and_updated_to_do_request() throws Exception {
         //Given
-        Integer wrongId = 0;
-
         String todoRequest = "{\n" +
                 "    \"done\" : \"true\"\n" +
                 "}";
         //When
         //Then
-        mockMvc.perform(put(format("/todos/%d", wrongId))
+        mockMvc.perform(put(format("/todos/%d", WRONG_ID))
                 .contentType(APPLICATION_JSON)
                 .content(todoRequest))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.errorCode").value("NOT_FOUND"))
-                .andExpect(jsonPath("$.errorMessage").value(format("Todo with ID %d not found", wrongId)))
-                .andExpect(jsonPath("$.status").value(404));
+                .andExpect(jsonPath("$.errorCode").value(NOT_FOUND))
+                .andExpect(jsonPath("$.errorMessage").value(format(FORMATTED_TODO_EXCEPTION_MESSAGE, WRONG_ID)))
+                .andExpect(jsonPath("$.status").value(STATUS_404));
     }
 
     @Test
     void should_delete_todo_when_delete_given_id_() throws Exception {
         //Given
         Todo todo = new Todo();
-        todo.setText("Todo 1");
+        todo.setText(TODO_1);
         todo.setDone(false);
         Integer returnedTodoId = todoRepository.save(todo).getId();
 
@@ -118,13 +121,12 @@ public class TodoIntegrationTest {
     @Test
     void should_return_not_found_status_when_delete_given_wrong_id() throws Exception {
         //Given
-        Integer wrongId = 0;
         //When
         //Then
-        mockMvc.perform(delete(format("/todos/%d", wrongId)))
+        mockMvc.perform(delete(format("/todos/%d", WRONG_ID)))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.errorCode").value("NOT_FOUND"))
-                .andExpect(jsonPath("$.errorMessage").value(format("Todo with ID %d not found", wrongId)))
-                .andExpect(jsonPath("$.status").value(404));
+                .andExpect(jsonPath("$.errorCode").value(NOT_FOUND))
+                .andExpect(jsonPath("$.errorMessage").value(format(FORMATTED_TODO_EXCEPTION_MESSAGE, WRONG_ID)))
+                .andExpect(jsonPath("$.status").value(STATUS_404));
     }
 }

@@ -9,6 +9,10 @@ import org.junit.jupiter.api.function.Executable;
 
 import java.util.List;
 
+import static com.oocl.todolistapi.TestConstants.NONE;
+import static com.oocl.todolistapi.TestConstants.ONCE;
+import static com.oocl.todolistapi.TestConstants.TODO_1;
+import static com.oocl.todolistapi.TestConstants.WRONG_ID;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
@@ -23,8 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class TodoServiceTest {
-    private static final int NONE = 0;
-    private static final int ONCE = 1;
+
     private TodoService todoService;
     private TodoRepository todoRepository;
 
@@ -52,7 +55,7 @@ class TodoServiceTest {
         //Given
         Todo todo = new Todo();
         todo.setId(1);
-        todo.setText("Todo 1");
+        todo.setText(TODO_1);
         todo.setDone(false);
 
         when(todoRepository.save(todo)).thenReturn(todo);
@@ -73,7 +76,7 @@ class TodoServiceTest {
         Integer id = 1;
         Todo todo = new Todo();
         todo.setId(id);
-        todo.setText("Todo 1");
+        todo.setText(TODO_1);
         todo.setDone(false);
         when(todoRepository.findById(id)).thenReturn(of(todo));
         when(todoRepository.save(todo)).thenReturn(todo);
@@ -95,19 +98,18 @@ class TodoServiceTest {
     @Test
     void should_return_a_todo_list_not_found_exception_when_update_todo_given_todo_and_wrong_todo_id() {
         //Given
-        Integer wrongId = 1;
-        when(todoRepository.findById(wrongId)).thenReturn(empty());
+        when(todoRepository.findById(WRONG_ID)).thenReturn(empty());
 
         Todo updatedTodo = new Todo();
         updatedTodo.setDone(true);
 
         //When
-        Executable executable = () -> todoService.update(wrongId, updatedTodo);
+        Executable executable = () -> todoService.update(WRONG_ID, updatedTodo);
 
         //Then
         Exception exception = assertThrows(TodoNotFoundException.class, executable);
-        assertEquals(format("Todo with ID %d not found", wrongId), exception.getMessage());
-        verify(todoRepository, times(ONCE)).findById(wrongId);
+        assertEquals(format("Todo with ID %d not found", WRONG_ID), exception.getMessage());
+        verify(todoRepository, times(ONCE)).findById(WRONG_ID);
         verify(todoRepository, times(NONE)).save(any(Todo.class));
     }
 
@@ -117,7 +119,7 @@ class TodoServiceTest {
         Integer id = 1;
         Todo todo = new Todo();
         todo.setId(id);
-        todo.setText("Todo 1");
+        todo.setText(TODO_1);
         todo.setDone(false);
         when(todoRepository.findById(id)).thenReturn(of(todo));
 
@@ -132,16 +134,15 @@ class TodoServiceTest {
     @Test
     void should_return_a_todo_list_not_found_exception_when_delete_todo_given_wrong_todo_id() {
         //Given
-        Integer wrongId = 1;
-        when(todoRepository.findById(wrongId)).thenReturn(empty());
+        when(todoRepository.findById(WRONG_ID)).thenReturn(empty());
 
         //When
-        Executable executable = () -> todoService.delete(wrongId);
+        Executable executable = () -> todoService.delete(WRONG_ID);
 
         //Then
         Exception exception = assertThrows(TodoNotFoundException.class, executable);
-        assertEquals(format("Todo with ID %d not found", wrongId), exception.getMessage());
-        verify(todoRepository, times(ONCE)).findById(wrongId);
+        assertEquals(format("Todo with ID %d not found", WRONG_ID), exception.getMessage());
+        verify(todoRepository, times(ONCE)).findById(WRONG_ID);
         verify(todoRepository, times(NONE)).save(any(Todo.class));
     }
 }
