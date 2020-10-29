@@ -40,7 +40,6 @@ public class TodoIntegrationTest {
         //Then
         mockMvc.perform(get("/todos"))
                 .andExpect(status().isOk());
-//                .andExpect(jsonPath("$").isArray());
     }
 
     @Test
