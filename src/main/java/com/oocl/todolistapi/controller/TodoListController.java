@@ -34,7 +34,7 @@ public class TodoListController {
     }
 
     @PutMapping("/{id}")
-    public Todo updateTodoStatus(@PathVariable int id, @RequestBody Todo updatedTodo) {
+    public Todo updateTodoStatus(@PathVariable Integer id, @RequestBody Todo updatedTodo) {
         return todos.stream()
                 .filter(todo -> todo.getId() == id)
                 .findFirst()
@@ -46,7 +46,7 @@ public class TodoListController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTodo(@PathVariable int id) {
+    public void deleteTodo(@PathVariable Integer id) {
         todos.stream()
                 .filter(todo -> todo.getId() == id)
                 .findFirst()
