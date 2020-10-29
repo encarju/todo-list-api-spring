@@ -110,4 +110,38 @@ class TodoServiceTest {
         verify(todoRepository, times(ONCE)).findById(wrongId);
         verify(todoRepository, times(NONE)).save(any(Todo.class));
     }
+
+    @Test
+    void should_delete_todo_when_delete_todo_given_todo_id() {
+        //Given
+        Integer id = 1;
+        Todo todo = new Todo();
+        todo.setId(id);
+        todo.setText("Todo 1");
+        todo.setDone(false);
+        when(todoRepository.findById(id)).thenReturn(of(todo));
+
+        //When
+        todoService.delete(id);
+
+        //Then
+        verify(todoRepository, times(ONCE)).findById(id);
+        verify(todoRepository, times(ONCE)).delete(todo);
+    }
+
+    @Test
+    void should_return_a_todo_list_not_found_exception_when_delete_todo_given_wrong_todo_id() {
+        //Given
+        Integer wrongId = 1;
+        when(todoRepository.findById(wrongId)).thenReturn(empty());
+
+        //When
+        Executable executable = () -> todoService.delete(wrongId);
+
+        //Then
+        Exception exception = assertThrows(TodoNotFoundException.class, executable);
+        assertEquals(format("Todo with ID %d not found", wrongId), exception.getMessage());
+        verify(todoRepository, times(ONCE)).findById(wrongId);
+        verify(todoRepository, times(NONE)).save(any(Todo.class));
+    }
 }

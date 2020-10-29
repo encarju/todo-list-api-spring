@@ -52,10 +52,6 @@ public class TodoListController {
 
     @DeleteMapping("/{id}")
     public void deleteTodo(@PathVariable Integer id) {
-        todos.stream()
-                .filter(todo -> todo.getId() == id)
-                .findFirst()
-                .map(todo -> todos.remove(todo))
-                .orElse(null);
+        todoService.delete(id);
     }
 }

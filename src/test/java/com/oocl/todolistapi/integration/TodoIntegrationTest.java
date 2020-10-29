@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static java.lang.String.format;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -95,6 +96,33 @@ public class TodoIntegrationTest {
         mockMvc.perform(put(format("/todos/%d", wrongId))
                 .contentType(APPLICATION_JSON)
                 .content(todoRequest))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("NOT_FOUND"))
+                .andExpect(jsonPath("$.errorMessage").value(format("Todo with ID %d not found", wrongId)))
+                .andExpect(jsonPath("$.status").value(404));
+    }
+
+    @Test
+    void should_delete_todo_when_delete_given_id_() throws Exception {
+        //Given
+        Todo todo = new Todo();
+        todo.setText("Todo 1");
+        todo.setDone(false);
+        Integer returnedTodoId = todoRepository.save(todo).getId();
+
+        //When
+        //Then
+        mockMvc.perform(delete(format("/todos/%d", returnedTodoId)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_return_not_found_status_when_delete_given_wrong_id() throws Exception {
+        //Given
+        Integer wrongId = 0;
+        //When
+        //Then
+        mockMvc.perform(delete(format("/todos/%d", wrongId)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("NOT_FOUND"))
                 .andExpect(jsonPath("$.errorMessage").value(format("Todo with ID %d not found", wrongId)))
