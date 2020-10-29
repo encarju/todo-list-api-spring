@@ -5,12 +5,6 @@ public class Todo {
     private String text;
     private boolean isDone;
 
-    public Todo(int id, String text, boolean isDone) {
-        this.id = id;
-        this.text = text;
-        this.isDone = isDone;
-    }
-
     public int getId() {
         return id;
     }
